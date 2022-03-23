@@ -2,7 +2,7 @@ const ROOT = '#root';
 
 function DisplayCode(content = '') {
   $(ROOT).empty().append(`
-<div class="validation">
+<div class="centered">
   <div id="qrcode"></div>
   <input
     id="otp"
@@ -14,29 +14,52 @@ function DisplayCode(content = '') {
   >
     Validate OTP
   </button>
+  <div
+    class="result"
+    id="result"
+  ></div>
+  <button
+    class="mt-1"
+    id="regenerate"
+    type="button"
+  >
+    Generate a new QR
+  </button>
 </div>
   `);
 
+  // eslint-disable-next-line
   const qrcode = new QRCode('qrcode');
 
   qrcode.makeCode(content);
-  const [token] = content.split('secret=')[1].split('&');
-  console.log(token);
+
+  const [secret] = content.split('secret=')[1].split('&');
 
   $('#validate').on('click', async () => {
-    const value = Number($('#otp').val());
+    $('#result').empty();
+    const password = Number($('#otp').val());
 
     try {
       await $.ajax({
         data: {
-          token,
-          value,
+          password,
+          secret,
         },
         method: 'POST',
         url: '/validate',
       });
-    } catch (error) {
-      console.log(error);
+
+      return $('#result').empty().append(`
+<div class="success">  
+  OTP is valid!
+</div>
+      `);
+    } catch {
+      return $('#result').empty().append(`
+<div class="error">  
+  OTP is invalid!
+</div>
+      `);
     }
   });
 }
@@ -48,7 +71,7 @@ function Index() {
     id="generate"
     type="button"
   >
-    Generate QR code
+    Generate QR
   </button>
 </div>  
   `);
