@@ -11,9 +11,16 @@ async function getContent() {
 function DisplayQR(data = {}) {
   $(ROOT).empty().append(`
 <div class="centered">
-  <div id="qrcode"></div>
+  <div
+    class="noselect"
+    id="qrcode"
+  ></div>
   <div class="example mt-1">
-    Token example: ${data.tokenExample} (expires in ${data.timeRemaining})
+    <span
+      class="noselect"
+    >Token example: </span>${data.tokenExample}<span
+      class="noselect"
+    > (expires in ${data.timeRemaining})</span>
   </div>
   <form
     class="form"
@@ -23,15 +30,19 @@ function DisplayQR(data = {}) {
       id="otp"
       type="number"
     />
-    <button type="submit">
-      Validate OTP
+    <button
+      class="noselect"
+      type="submit"
+    >
+      Validate token
     </button>
   </form>
   <div
-    class="result"
+    class="result noselect"
     id="result"
   ></div>
   <button
+    class="noselect"
     id="regenerate"
     type="button"
   >
@@ -52,6 +63,13 @@ function DisplayQR(data = {}) {
     $('#result').empty();
     const token = Number($('#otp').val());
 
+    if (!token) {
+      return $('#result').empty().append(`
+<div class="error">  
+  Please provide a token!
+</div>
+      `);
+    }
     try {
       await $.ajax({
         data: {
@@ -64,13 +82,13 @@ function DisplayQR(data = {}) {
 
       return $('#result').empty().append(`
 <div class="success">  
-  OTP is valid!
+  Token is valid!
 </div>
       `);
     } catch {
       return $('#result').empty().append(`
 <div class="error">  
-  OTP is invalid!
+  Token is invalid!
 </div>
       `);
     }
@@ -86,6 +104,7 @@ function Index() {
   $(ROOT).append(`
 <div class="centered">
   <button
+    class="noselect"
     id="generate"
     type="button"
   >

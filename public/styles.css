@@ -45,6 +45,7 @@ button:hover {
 
 input {
   border: 2px solid var(--accent);
+  border-radius: calc(var(--spacer) / 2);
   margin: var(--spacer) 0;
   outline: none;
   padding: var(--spacer);
@@ -80,6 +81,14 @@ main {
 
 .mt-1 {
   margin-top: var(--spacer);
+}
+
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .centered, .form {
