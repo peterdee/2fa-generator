@@ -1,14 +1,28 @@
 {
   "name": "2fa-generator",
   "version": "1.0.0",
-  "description": "",
+  "description": "Testing utility for the 2FA mobile application",
+  "private": true,
+  "author": {
+    "name": "Peter Dyumin",
+    "url": "https://github.com/peterdee"
+  },
   "type": "module",
   "scripts": {
     "dev": "nodemon ./index.js",
-    "lint": "eslint"
+    "lint": "eslint",
+    "start": "node ./index.js"
   },
-  "author": "",
-  "license": "ISC",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peterdee/2fa-generator"
+  },
+  "homepage": "https://github.com/peterdee/2fa-generator",
   "dependencies": {
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",

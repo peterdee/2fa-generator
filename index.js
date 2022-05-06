@@ -52,7 +52,8 @@ app.post(
   },
 );
 
+const port = Number(process.env.PORT) || 9009;
 app.listen(
-  9009,
-  () => logger('-- 2FA-GENERATOR is running on port 9009'),
+  port,
+  () => logger(`-- 2FA-GENERATOR is running on port ${port}`),
 );
