@@ -6,6 +6,8 @@ Stack: [Node](https://nodejs.org), [Express](http://expressjs.com), [OTPLib](htt
 
 DEV: http://localhost:9009
 
+STAGE: https://generator-2fa.herokuapp.com
+
 ### Deploy
 
 ```shell script
@@ -20,6 +22,10 @@ npm i
 ```shell script
 npm run dev
 ```
+
+### Heroku
+
+This application is manually deployed to Heroku
 
 ### License
 
