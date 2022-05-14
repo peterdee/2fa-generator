@@ -67,7 +67,7 @@ function DisplayQR(data = {}) {
 
   const [secret] = data.keyURI.split('secret=')[1].split('&');
 
-  setInterval(
+  const interval = setInterval(
     async () => {
       REMAINING -= 1;
       if (REMAINING >= 0) {
@@ -126,6 +126,7 @@ function DisplayQR(data = {}) {
   });
 
   $('#regenerate').on('click', async () => {
+    clearInterval(interval);
     const newData = await getContent();
     return DisplayQR(newData);
   });
