@@ -1,0 +1,59 @@
+:root {
+  --accent: blue;
+  --accent-highlight: rgb(88, 99, 255);
+  --background: white;
+  --spacer: 16px;
+  --text: #050815;
+  --text-inverted: white;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body, html {
+  background-color: var(--background);
+}
+
+button {
+  background-color: var(--accent);
+  border: none;
+  border-radius: calc(var(--spacer) / 2);
+  color: var(--text-inverted);
+  font-size: var(--spacer);
+  padding: var(--spacer);
+  transition: background-color 200ms ease-out;
+}
+
+button:hover {
+  background-color: var(--accent-highlight);
+  cursor: pointer;
+  transition: background-color 200ms ease-in;
+}
+
+input {
+  border: 1px solid var(--accent);
+  margin: var(--spacer) 0;
+  padding: var(--spacer);
+  width: 100%;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+  width: 100%;
+}
+
+.centered, .validation {
+  margin: 0 auto;
+}
+
+.validation {
+  display: flex;
+  flex-direction: column;
+}
+
