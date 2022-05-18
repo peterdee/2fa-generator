@@ -1,25 +1,37 @@
 const ROOT = '#root';
 
-function DisplayCode(content = '') {
+async function getContent() {
+  const { data } = await $.ajax({
+    method: 'GET',
+    url: '/generate',
+  });
+  return data;
+}
+
+function DisplayQR(data = {}) {
   $(ROOT).empty().append(`
 <div class="centered">
   <div id="qrcode"></div>
-  <input
-    id="otp"
-    type="number"
-  />
-  <button
-    id="validate"
-    type="button"
+  <div class="example mt-1">
+    Token example: ${data.tokenExample} (expires in ${data.timeRemaining})
+  </div>
+  <form
+    class="form"
+    id="validate-form"
   >
-    Validate OTP
-  </button>
+    <input
+      id="otp"
+      type="number"
+    />
+    <button type="submit">
+      Validate OTP
+    </button>
+  </form>
   <div
     class="result"
     id="result"
   ></div>
   <button
-    class="mt-1"
     id="regenerate"
     type="button"
   >
@@ -31,19 +43,20 @@ function DisplayCode(content = '') {
   // eslint-disable-next-line
   const qrcode = new QRCode('qrcode');
 
-  qrcode.makeCode(content);
+  qrcode.makeCode(data.keyURI);
 
-  const [secret] = content.split('secret=')[1].split('&');
+  const [secret] = data.keyURI.split('secret=')[1].split('&');
 
-  $('#validate').on('click', async () => {
+  $('#validate-form').on('submit', async (event) => {
+    event.preventDefault();
     $('#result').empty();
-    const password = Number($('#otp').val());
+    const token = Number($('#otp').val());
 
     try {
       await $.ajax({
         data: {
-          password,
           secret,
+          token,
         },
         method: 'POST',
         url: '/validate',
@@ -62,6 +75,11 @@ function DisplayCode(content = '') {
       `);
     }
   });
+
+  $('#regenerate').on('click', async () => {
+    const newData = await getContent();
+    return DisplayQR(newData);
+  });
 }
 
 function Index() {
@@ -77,12 +95,8 @@ function Index() {
   `);
 
   $('#generate').on('click', async () => {
-    const { content } = await $.ajax({
-      method: 'GET',
-      url: '/generate',
-    });
-
-    return DisplayCode(content);
+    const data = await getContent();
+    return DisplayQR(data);
   });
 }
 

@@ -2,7 +2,9 @@
   --accent: blue;
   --accent-highlight: rgb(88, 99, 255);
   --background: white;
+  --error: #dd5645;
   --spacer: 16px;
+  --success: #23dd12;
   --text: #050815;
   --text-inverted: white;
 }
@@ -80,9 +82,48 @@ main {
   margin-top: var(--spacer);
 }
 
-.centered {
+.centered, .form {
   display: flex;
   margin: 0 auto;
   flex-direction: column;
 }
 
+.example {
+  font-size: calc(var(--spacer) - (var(--spacer) / 4));
+  text-align: center;
+  width: 100%;
+}
+
+.form {
+  margin: 0;
+}
+
+.result {
+  font-size: var(--spacer);
+  height: calc(var(--spacer) * 2);
+  margin: var(--spacer) 0;
+  text-align: center;
+  width: 100%;
+}
+
+@keyframes fading {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.error, .success {
+  animation: fading ease-in 0.5s;
+  opacity: 1;
+}
+
+.error {
+  color: var(--error);
+}
+
+.success {
+  color: var(--success);
+}

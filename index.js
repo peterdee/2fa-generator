@@ -3,6 +3,8 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
 
+import logger from './logger.js';
+
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -12,13 +14,20 @@ app.use(express.static(`${process.cwd()}/public`));
 app.get(
   '/generate',
   (_, response) => {
-    const content = authenticator.keyuri(
+    const secret = authenticator.generateSecret();
+    const keyURI = authenticator.keyuri(
       'Test',
       '2FA-Generator',
-      authenticator.generateSecret(),
+      secret,
     );
     return response.status(200).send({
-      content,
+      data: {
+        keyURI,
+        timeRemaining: authenticator.timeRemaining(),
+        tokenExample: authenticator.generate(secret),
+      },
+      info: 'OK',
+      status: 200,
     });
   },
 );
@@ -26,17 +35,24 @@ app.get(
 app.post(
   '/validate',
   (request, response) => {
-    const { body: { token = '', value = null } = {} } = request;
+    const { body: { secret, token } = {} } = request;
 
-    const isValid = authenticator.verify({ token, secret: Number(value) });
+    const isValid = authenticator.verify({ secret, token });
     if (!isValid) {
       return response.status(400).send({
-        error: 'OTP is invalid',
+        info: 'OTP_IS_INVALID',
+        status: 400,
       });
     }
 
-    return response.status(200);
+    return response.status(200).send({
+      info: 'OK',
+      status: 200,
+    });
   },
 );
 
-app.listen(9009);
+app.listen(
+  9009,
+  () => logger('-- 2FA-GENERATOR is running on port 9009'),
+);
