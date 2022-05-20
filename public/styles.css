@@ -2,9 +2,9 @@
   --accent: blue;
   --accent-highlight: rgb(88, 99, 255);
   --background: white;
-  --error: #dd5645;
+  --error: #cc5645;
   --spacer: 16px;
-  --success: #23dd12;
+  --success: #23cc12;
   --text: #050815;
   --text-inverted: white;
 }
@@ -95,6 +95,24 @@ main {
   display: flex;
   margin: 0 auto;
   flex-direction: column;
+}
+
+.title {
+  background: -webkit-linear-gradient(var(--accent), var(--background));
+  background-clip: text;
+  text-align: center;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.title-big {
+  font-size: calc(var(--spacer) * 2);
+  font-weight: 600;
+}
+
+.title-small {
+  font-size: var(--spacer);
+  font-weight: 200;
 }
 
 .example {

@@ -33,6 +33,21 @@ app.get(
 );
 
 app.post(
+  '/token',
+  (request, response) => {
+    const { body: { secret } = {} } = request;
+    return response.status(200).send({
+      data: {
+        timeRemaining: authenticator.timeRemaining(),
+        tokenExample: authenticator.generate(secret),
+      },
+      info: 'OK',
+      status: 200,
+    });
+  },
+);
+
+app.post(
   '/validate',
   (request, response) => {
     const { body: { secret, token } = {} } = request;

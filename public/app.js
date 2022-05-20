@@ -1,5 +1,8 @@
 const ROOT = '#root';
 
+let REMAINING = 0;
+let TOKEN_EXAMPLE = '';
+
 async function getContent() {
   const { data } = await $.ajax({
     method: 'GET',
@@ -9,18 +12,24 @@ async function getContent() {
 }
 
 function DisplayQR(data = {}) {
+  REMAINING = data.timeRemaining;
+  TOKEN_EXAMPLE = data.tokenExample;
+
   $(ROOT).empty().append(`
 <div class="centered">
+  <span class="title title-small noselect">
+    2FA Generator
+  </span>
   <div
-    class="noselect"
+    class="noselect mt-1"
     id="qrcode"
   ></div>
   <div class="example mt-1">
     <span
       class="noselect"
-    >Token example: </span>${data.tokenExample}<span
+    >Token example: </span><span id="example">${String(TOKEN_EXAMPLE)}</span><span
       class="noselect"
-    > (expires in ${data.timeRemaining})</span>
+    > (expires in <span id="remaining">${REMAINING}</span>)</span>
   </div>
   <form
     class="form"
@@ -57,6 +66,28 @@ function DisplayQR(data = {}) {
   qrcode.makeCode(data.keyURI);
 
   const [secret] = data.keyURI.split('secret=')[1].split('&');
+
+  setInterval(
+    async () => {
+      REMAINING -= 1;
+      if (REMAINING >= 0) {
+        $('#remaining').empty().append(REMAINING);
+      } else {
+        const { data: { timeRemaining, tokenExample } = {} } = await $.ajax({
+          data: {
+            secret,
+          },
+          method: 'POST',
+          url: '/token',
+        });
+        REMAINING = timeRemaining;
+        TOKEN_EXAMPLE = String(tokenExample);
+        $('#remaining').empty().append(REMAINING);
+        $('#example').empty().append(TOKEN_EXAMPLE);
+      }
+    },
+    1000,
+  );
 
   $('#validate-form').on('submit', async (event) => {
     event.preventDefault();
@@ -103,8 +134,11 @@ function DisplayQR(data = {}) {
 function Index() {
   $(ROOT).append(`
 <div class="centered">
+  <span class="title title-big noselect">
+    2FA Generator
+  </span>
   <button
-    class="noselect"
+    class="noselect mt-1"
     id="generate"
     type="button"
   >
