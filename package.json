@@ -1,7 +1,7 @@
 {
   "name": "2fa-generator",
   "version": "1.0.0",
-  "description": "Testing utility for the 2FA mobile application",
+  "description": "Testing utility for 2FA Mobile",
   "private": true,
   "author": {
     "name": "Peter Dyumin",
@@ -15,7 +15,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=16.0.0",
+    "node": ">=18.0.0",
     "npm": ">=8.0.0"
   },
   "repository": {
