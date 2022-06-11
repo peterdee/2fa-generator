@@ -145,8 +145,18 @@ function Index() {
   >
     Generate QR
   </button>
+  <button
+    class="noselect mt-1"
+    id="configure"
+    type="button"
+  >
+    Configure
+  </button>
 </div>  
   `);
+
+  // eslint-disable-next-line
+  $('#configure').on('click', () => SecretParams(ROOT));
 
   $('#generate').on('click', async () => {
     const data = await getContent();

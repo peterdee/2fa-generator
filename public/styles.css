@@ -1,10 +1,11 @@
 :root {
-  --accent: blue;
-  --accent-highlight: rgb(88, 99, 255);
+  --accent: #2244FF;
+  --accent-highlight: #55AAFF;
   --background: white;
-  --error: #cc5645;
+  --error: #BF1725;
   --spacer: 16px;
-  --success: #23cc12;
+  --spacer-half: 8px;
+  --success: #259F37;
   --text: #050815;
   --text-inverted: white;
 }
@@ -77,6 +78,14 @@ main {
   height: calc(100vh - (var(--spacer) * 2));
   justify-content: center;
   width: 100%;
+}
+
+select {
+  border: 2px solid var(--accent);
+  border-radius: calc(var(--spacer) / 2);
+  outline: none;
+  padding: var(--spacer-half);
+  width: calc(var(--spacer) * 8);
 }
 
 .mt-1 {
