@@ -44,6 +44,10 @@ button:hover {
   transition: background-color 200ms ease-in, box-shadow 200ms ease-in;
 }
 
+h1 {
+  color: var(--accent);
+}
+
 input {
   border: 2px solid var(--accent);
   border-radius: calc(var(--spacer) / 2);
@@ -88,8 +92,20 @@ select {
   width: calc(var(--spacer) * 8);
 }
 
+.direction-column {
+  flex-direction: column;
+}
+.flex {
+  display: flex;
+}
+.margin-auto {
+  margin: 0 auto;
+}
 .mt-1 {
   margin-top: var(--spacer);
+}
+.width {
+  width: 720px;
 }
 
 .noselect {
