@@ -1,3 +1,28 @@
+const DEFAULT_ACCOUNT_NAME = 'user@localhost';
+const DEFAULT_PERIOD = 30;
+const DEFAULT_ISSUER = '2FA Generator';
+const INPUT_LENGTH = 64;
+
+async function handleGenerate(event) {
+  event.preventDefault();
+
+  const accountName = $('#accountName').val().trim() || DEFAULT_ACCOUNT_NAME;
+  const algorithm = $('#algorithm').val();
+  const digits = Number($('#digits').val());
+  const issuer = $('#issuer').val().trim() || DEFAULT_ISSUER;
+  const period = Number($('#period').val()) || DEFAULT_PERIOD;
+  console.log(accountName, algorithm, digits, issuer, period);
+}
+
+function handleInput(event) {
+  const target = event.target.name;
+  const lengthLeft = INPUT_LENGTH - $(`#${target}`).val().length;
+  if (lengthLeft >= 0) {
+    return $(`#${target}LengthLeft`).empty().append(lengthLeft);
+  }
+  return $(`#${target}`).val($(`#${target}`).val().slice(0, -1));
+}
+
 // eslint-disable-next-line
 function SecretParams(ROOT = '') {
   $(ROOT).empty().append(`
@@ -8,13 +33,13 @@ function SecretParams(ROOT = '') {
   <div class="noselect">
     Generate a custom TOTP Key URI
   </div>
-  <div class="flex mt-1">
-    <div class="flex direction-column noselect">
+  <form id="generate">
+    <div class="flex direction-column mt-1 noselect">
       <div>
         Algorithm
       </div>
       <select
-        class="mt-1"
+        class="mt-half"
         id="algorithm"
         name="algorithm"
       >
@@ -23,12 +48,12 @@ function SecretParams(ROOT = '') {
         <option value="SHA512">SHA512</option>
       </select>
     </div>
-    <div class="flex direction-column">
+    <div class="flex direction-column mt-1 noselect">
       <div>
         Digits
       </div>
       <select
-        class="mt-1"
+        class="mt-half"
         id="digits"
         name="digits"
       >
@@ -36,18 +61,67 @@ function SecretParams(ROOT = '') {
         <option value="8">8</option>
       </select>
     </div>
-    <div class="flex direction-column">
+    <div class="flex direction-column mt-1 noselect">
       <div>
         Period
       </div>
       <input
+        class="mt-half"
         id="period"
         name="period"
         placeholder="30"
         type="number"
       />
     </div>
-  </div>
+    <div class="flex direction-column mt-1 noselect">
+      <div class="flex justify-content-space-between">
+        <div>
+          Issuer
+        </div>
+        <div id="issuerLengthLeft"></div>  
+      </div>
+      <input
+        class="mt-half"
+        id="issuer"
+        name="issuer"
+        placeholder="2FA Generator"
+        type="text"
+      />
+    </div>
+    <div class="flex direction-column mt-1 noselect">
+      <div class="flex justify-content-space-between">
+        <div>
+          Account name
+        </div>
+        <div id="accountNameLengthLeft"></div>  
+      </div>
+      <input
+        class="mt-half"
+        id="accountName"
+        name="accountName"
+        placeholder="user@localhost"
+        type="text"
+      />
+    </div>
+    <button
+      class="mt-2 noselect width"
+      type="submit"
+    >
+      Generate
+    </button>
+  </form>
 </div>
   `);
+
+  $('#accountName').val(DEFAULT_ACCOUNT_NAME);
+  $('#issuer').val(DEFAULT_ISSUER);
+  $('#period').val(DEFAULT_PERIOD);
+
+  $('#accountNameLengthLeft').empty().append(INPUT_LENGTH - $('#accountName').val().length);
+  $('#issuerLengthLeft').empty().append(INPUT_LENGTH - $('#issuer').val().length);
+
+  $('#accountName').on('input', handleInput);
+  $('#issuer').on('input', handleInput);
+
+  $('#generate').on('submit', handleGenerate);
 }

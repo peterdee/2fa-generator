@@ -51,11 +51,10 @@ h1 {
 input {
   border: 2px solid var(--accent);
   border-radius: calc(var(--spacer) / 2);
-  margin: var(--spacer) 0;
   outline: none;
-  padding: var(--spacer);
-  width: 100%;
+  padding: var(--spacer-half);
   transition: border 200ms ease-out, box-shadow 200ms ease-out;
+  width: 100%;
 }
 
 input:hover {
@@ -89,7 +88,19 @@ select {
   border-radius: calc(var(--spacer) / 2);
   outline: none;
   padding: var(--spacer-half);
-  width: calc(var(--spacer) * 8);
+  width: 100%;
+}
+
+select:hover {
+  border: 2px solid var(--accent-highlight);
+  box-shadow: 0 0 calc(var(--spacer) / 2) calc(var(--spacer) / 8) var(--accent-highlight);
+  transition: border 200ms ease-in, box-shadow 200ms ease-in;
+}
+
+select:focus {
+  border: 2px solid var(--accent-highlight);
+  box-shadow: 0 0 calc(var(--spacer) / 2) calc(var(--spacer) / 8) var(--accent-highlight);
+  transition: border 200ms ease-in, box-shadow 200ms ease-in;
 }
 
 .direction-column {
@@ -98,14 +109,23 @@ select {
 .flex {
   display: flex;
 }
+.justify-content-space-between {
+  justify-content: space-between;
+}
 .margin-auto {
   margin: 0 auto;
 }
 .mt-1 {
   margin-top: var(--spacer);
 }
+.mt-2 {
+  margin-top: calc(var(--spacer) * 2);
+}
+.mt-half {
+  margin-top: var(--spacer-half);
+}
 .width {
-  width: 720px;
+  width: 400px;
 }
 
 .noselect {
