@@ -11,7 +11,23 @@ async function handleGenerate(event) {
   const digits = Number($('#digits').val());
   const issuer = $('#issuer').val().trim() || DEFAULT_ISSUER;
   const period = Number($('#period').val()) || DEFAULT_PERIOD;
-  console.log(accountName, algorithm, digits, issuer, period);
+
+  try {
+    const response = await $.ajax({
+      data: {
+        accountName,
+        // algorithm,
+        // digits,
+        // issuer,
+        // period,
+      },
+      method: 'POST',
+      url: '/api/generate',
+    });
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 function handleInput(event) {
@@ -27,14 +43,32 @@ function handleInput(event) {
 function SecretParams(ROOT = '') {
   $(ROOT).empty().append(`
 <div class="flex direction-column margin-auto width">
-  <h1 class="noselect">
-    2FA Generator
-  </h1>
-  <div class="noselect">
-    Generate a custom TOTP Key URI
+  <div class="flex align-center">
+    <button
+      id="logo"
+      class="logo"
+      type="button"
+    >
+      <img
+        alt="2FA Generator"
+        class="logo-image"
+        src="./logo.svg"
+      />
+    </button>
+    <div class="flex direction-column ml-1 noselect">
+      <h1>
+        2FA Generator
+      </h1>
+      <div>
+        Generate a custom TOTP Key URI
+      </div>
+    </div>
   </div>
-  <form id="generate">
-    <div class="flex direction-column mt-1 noselect">
+  <form
+    class="flex direction-column mt-2 noselect"
+    id="generate"
+  >
+    <div class="flex direction-column">
       <div>
         Algorithm
       </div>
@@ -48,7 +82,7 @@ function SecretParams(ROOT = '') {
         <option value="SHA512">SHA512</option>
       </select>
     </div>
-    <div class="flex direction-column mt-1 noselect">
+    <div class="flex direction-column mt-1">
       <div>
         Digits
       </div>
@@ -61,7 +95,7 @@ function SecretParams(ROOT = '') {
         <option value="8">8</option>
       </select>
     </div>
-    <div class="flex direction-column mt-1 noselect">
+    <div class="flex direction-column mt-1">
       <div>
         Period
       </div>
@@ -73,7 +107,7 @@ function SecretParams(ROOT = '') {
         type="number"
       />
     </div>
-    <div class="flex direction-column mt-1 noselect">
+    <div class="flex direction-column mt-1">
       <div class="flex justify-content-space-between">
         <div>
           Issuer
@@ -88,7 +122,7 @@ function SecretParams(ROOT = '') {
         type="text"
       />
     </div>
-    <div class="flex direction-column mt-1 noselect">
+    <div class="flex direction-column mt-1">
       <div class="flex justify-content-space-between">
         <div>
           Account name
@@ -104,7 +138,7 @@ function SecretParams(ROOT = '') {
       />
     </div>
     <button
-      class="mt-2 noselect width"
+      class="mt-2 width"
       type="submit"
     >
       Generate

@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
 
+import generate from './apis/generate/index.js';
 import logger from './logger.js';
 
 const app = express();
@@ -10,6 +11,8 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 app.use(express.static(`${process.cwd()}/public`));
+
+app.use('/api/generate', generate);
 
 app.get(
   '/generate',

@@ -103,6 +103,9 @@ select:focus {
   transition: border 200ms ease-in, box-shadow 200ms ease-in;
 }
 
+.align-center {
+  align-items: center;
+}
 .direction-column {
   flex-direction: column;
 }
@@ -114,6 +117,9 @@ select:focus {
 }
 .margin-auto {
   margin: 0 auto;
+}
+.ml-1 {
+  margin-left: var(--spacer);
 }
 .mt-1 {
   margin-top: var(--spacer);
@@ -140,6 +146,31 @@ select:focus {
   display: flex;
   margin: 0 auto;
   flex-direction: column;
+}
+
+.logo, .logo-image {
+  height: calc(var(--spacer) * 4);
+  user-select: none;
+  width: calc(var(--spacer) * 4);
+}
+.logo {
+  animation: rotate 1s ease-in-out infinite;
+  animation-play-state: paused;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+.logo:hover{
+  animation-play-state: running;
+  background-color: transparent;
+  box-shadow: none;
+  cursor: pointer;
+  padding: 0;
+}
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }           
 }
 
 .title {
