@@ -4,7 +4,7 @@ import cors from 'cors';
 import express from 'express';
 
 import generate from './apis/generate/index.js';
-import logger from './logger.js';
+import logger from './utilities/logger.js';
 
 const app = express();
 

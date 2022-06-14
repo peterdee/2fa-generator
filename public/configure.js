@@ -16,10 +16,10 @@ async function handleGenerate(event) {
     const response = await $.ajax({
       data: {
         accountName,
-        // algorithm,
-        // digits,
-        // issuer,
-        // period,
+        algorithm,
+        digits,
+        issuer,
+        period,
       },
       method: 'POST',
       url: '/api/generate',
