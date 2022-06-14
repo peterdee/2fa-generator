@@ -1,7 +1,10 @@
 import CustomError from '../../utilities/custom-error.js';
+import {
+  RESPONSE_MESSAGES,
+  RESPONSE_STATUSES,
+} from '../../configuration/index.js';
 import response from '../../utilities/response.js';
-import { RESPONSE_MESSAGES, RESPONSE_STATUSES } from '../../configuration/index.js';
-import validateGenerateData from './generate.service.js';
+import { getKeyURI, validateGenerateData } from './generate.service.js';
 
 async function generateController(request, reply) {
   try {
@@ -12,7 +15,17 @@ async function generateController(request, reply) {
         info: RESPONSE_MESSAGES.validationError,
       });
     }
-    return response({ reply, request });
+
+    const keyURI = getKeyURI(value);
+
+    console.log(keyURI);
+    return response({
+      data: {
+        keyURI,
+      },
+      reply,
+      request,
+    });
   } catch (error) {
     if (error instanceof CustomError) {
       return response({
