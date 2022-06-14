@@ -1,4 +1,4 @@
-import { Authenticator } from 'otplib/core';
+import authenticator from 'otplib';
 
 import generateKeyURISchema from './generate-keyuri.schema.js';
 import { KEY_URI_DEFAULTS } from '../../configuration/index.js';
