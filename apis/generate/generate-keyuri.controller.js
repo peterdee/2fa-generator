@@ -16,12 +16,11 @@ async function generateController(request, reply) {
       });
     }
 
-    const keyURI = getKeyURI(value);
+    const result = getKeyURI(value);
 
-    console.log(keyURI);
     return response({
       data: {
-        keyURI,
+        ...result,
       },
       reply,
       request,

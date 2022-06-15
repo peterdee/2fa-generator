@@ -1,4 +1,6 @@
-import authenticator from 'otplib';
+import { Authenticator } from '@otplib/core';
+import { createDigest, createRandomBytes } from '@otplib/plugin-crypto';
+import { keyDecoder, keyEncoder } from '@otplib/plugin-thirty-two';
 
 import generateKeyURISchema from './generate-keyuri.schema.js';
 import { KEY_URI_DEFAULTS } from '../../configuration/index.js';
@@ -10,15 +12,16 @@ export function getKeyURI({
   issuer = KEY_URI_DEFAULTS.issuer,
   period = KEY_URI_DEFAULTS.period,
 }) {
-  console.log('here');
-  const instance = new Authenticator();
-  console.log('here');
-  instance.options = {
-    algorithm,
+  const instance = new Authenticator({
+    algorithm: algorithm.toLowerCase(),
+    createDigest,
+    createRandomBytes,
     digits,
+    keyDecoder,
+    keyEncoder,
     step: period,
-  };
-  console.log(instance);
+  });
+
   const secret = instance.generateSecret();
   const keyURI = instance.keyuri(
     accountName,
@@ -26,7 +29,17 @@ export function getKeyURI({
     secret,
   );
 
-  return keyURI;
+  return {
+    keyURI,
+    options: {
+      accountName,
+      algorithm,
+      digits,
+      issuer,
+      period,
+    },
+    secret,
+  };
 }
 
 export function validateGenerateData(body) {
