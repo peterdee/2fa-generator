@@ -39,6 +39,8 @@ export function getKeyURI({
       period,
     },
     secret,
+    timeRemaining: instance.timeRemaining(),
+    tokenExample: instance.generate(secret),
   };
 }
 
