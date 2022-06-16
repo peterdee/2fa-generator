@@ -3,6 +3,9 @@
   --accent-highlight: #55AAFF;
   --background: white;
   --error: #BF1725;
+  --muted: #A0A0A0;
+  --mutedDark: #686868;
+  --mutedLight: #EAEAEA;
   --spacer: 16px;
   --spacer-half: 8px;
   --success: #259F37;
@@ -33,7 +36,7 @@ button {
   box-shadow: none;
   color: var(--text-inverted);
   font-size: var(--spacer);
-  padding: var(--spacer);
+  height: calc(var(--spacer) * 3);
   transition: background-color 200ms ease-out, box-shadow 200ms ease-out;
 }
 
@@ -42,6 +45,13 @@ button:hover {
   box-shadow: 0 0 calc(var(--spacer) / 2) calc(var(--spacer) / 8) var(--accent-highlight);
   cursor: pointer;
   transition: background-color 200ms ease-in, box-shadow 200ms ease-in;
+}
+
+button:disabled {
+  background-color: var(--muted);
+  box-shadow: none;
+  cursor: not-allowed;
+  transition: background-color 200ms ease-in;
 }
 
 h1 {
@@ -171,6 +181,13 @@ select:focus {
   to {
     transform: rotate(360deg);
   }           
+}
+
+.button-loader {
+  animation: rotate 1.5s linear infinite;
+  height: calc(var(--spacer) * 2);
+  user-select: none;
+  width: calc(var(--spacer) * 2);
 }
 
 .title {

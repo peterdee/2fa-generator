@@ -12,6 +12,17 @@ async function handleGenerate(event) {
   const issuer = $('#issuer').val().trim() || DEFAULT_ISSUER;
   const period = Number($('#period').val()) || DEFAULT_PERIOD;
 
+  // eslint-disable-next-line
+  toggleElements(['generate-button', 'generate-form']);
+
+  $('#generate-button').empty().append(`
+<img
+  alt="Loading"
+  class="button-loader"
+  src="/loader.svg"
+/>
+  `);
+
   try {
     const response = await $.ajax({
       data: {
@@ -66,7 +77,7 @@ function SecretParams(ROOT = '') {
   </div>
   <form
     class="flex direction-column mt-2 noselect"
-    id="generate"
+    id="generate-form"
   >
     <div class="flex direction-column">
       <div>
@@ -138,6 +149,7 @@ function SecretParams(ROOT = '') {
       />
     </div>
     <button
+      id="generate-button"
       class="mt-2 width"
       type="submit"
     >
@@ -157,5 +169,5 @@ function SecretParams(ROOT = '') {
   $('#accountName').on('input', handleInput);
   $('#issuer').on('input', handleInput);
 
-  $('#generate').on('submit', handleGenerate);
+  $('#generate-form').on('submit', handleGenerate);
 }
