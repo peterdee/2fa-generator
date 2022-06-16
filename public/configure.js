@@ -12,8 +12,19 @@ async function handleGenerate(event) {
   const issuer = $('#issuer').val().trim() || DEFAULT_ISSUER;
   const period = Number($('#period').val()) || DEFAULT_PERIOD;
 
-  // eslint-disable-next-line
-  toggleElements(['generate-button', 'generate-form']);
+  if (period > 9999) {
+    return showError('error-container', 'Period value should be less than 9999!');
+  }
+
+  toggleElements([
+    'accountName',
+    'algorithm',
+    'digits',
+    'generate-button',
+    'generate-form',
+    'issuer',
+    'period',
+  ]);
 
   $('#generate-button').empty().append(`
 <img
@@ -23,12 +34,16 @@ async function handleGenerate(event) {
 />
   `);
 
+  await new Promise((resolve) => {
+    setTimeout(resolve, 500);
+  });
+
   try {
     const response = await $.ajax({
       data: {
         accountName,
         algorithm,
-        digits,
+        digits: 10,
         issuer,
         period,
       },
@@ -37,7 +52,22 @@ async function handleGenerate(event) {
     });
     console.log(response);
   } catch (error) {
-    console.log(error);
+    toggleElements(
+      [
+        'accountName',
+        'algorithm',
+        'digits',
+        'generate-button',
+        'generate-form',
+        'issuer',
+        'period',
+      ],
+      ELEMENT_ACTIONS.enable,
+    );
+
+    $('#generate-button').empty().append('Generate');
+
+    console.log(error.responseJSON);
   }
 }
 
@@ -50,10 +80,9 @@ function handleInput(event) {
   return $(`#${target}`).val($(`#${target}`).val().slice(0, -1));
 }
 
-// eslint-disable-next-line
 function SecretParams(ROOT = '') {
   $(ROOT).empty().append(`
-<div class="flex direction-column margin-auto width">
+<div class="flex direction-column margin-auto mb-1 mt-1 width">
   <div class="flex align-center">
     <button
       id="logo"
@@ -156,6 +185,10 @@ function SecretParams(ROOT = '') {
       Generate
     </button>
   </form>
+  <div
+    id="error-container"
+    class="error-container noselect"
+  ></div>
 </div>
   `);
 
