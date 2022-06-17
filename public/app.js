@@ -35,9 +35,7 @@ async function handleGenerate(event) {
 />
   `);
 
-  await new Promise((resolve) => {
-    setTimeout(resolve, 500);
-  });
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
   try {
     const response = await $.ajax({
@@ -115,7 +113,7 @@ function Index() {
         2FA Generator
       </h1>
       <div>
-        Generate a custom TOTP Key URI
+        2FA Mobile testing utility
       </div>
     </div>
   </div>

@@ -21,7 +21,7 @@ export function createAuthenticator({
 }
 
 export function verifyToken({
-  algorithm,
+  algorithm = KEY_URI_DEFAULTS.algorithm,
   period = KEY_URI_DEFAULTS.period,
   secret,
   token,

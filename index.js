@@ -16,16 +16,15 @@ import response from './utilities/response.js';
 import verify from './apis/verify/index.js';
 
 const app = express();
-const limit = limiter({
-  max: 20,
-  windowMs: 60000,
-});
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 app.use(express.static(`${process.cwd()}/public`));
 app.use(helmet());
-app.use(limit);
+app.use(limiter({
+  max: 20,
+  windowMs: 60000,
+}));
 
 app.use('/api/generate', generate);
 app.use('/api/verify', verify);

@@ -1,17 +1,17 @@
 async function handleForm(event, data) {
   event.preventDefault();
 
-  console.log(data);
   const value = $('#token').val();
   if (!value) {
-    return showError('error-container', 'Please provide the token!');
+    return showError('message-container', 'Please provide the token!');
   }
   const tokenLength = String(value).length;
   if (tokenLength !== 6 && tokenLength !== 8) {
-    return showError('error-container', 'Token length is invalid!');
+    return showError('message-container', 'Token length is invalid!');
   }
 
   toggleElements([
+    'back-button',
     'token',
     'verify-button',
     'verify-form',
@@ -25,13 +25,14 @@ async function handleForm(event, data) {
 />
   `);
 
-  await new Promise((resolve) => {
-    setTimeout(resolve, 500);
-  });
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
   try {
     const response = await $.ajax({
       data: {
+        algorithm: data.options.algorithm,
+        period: data.options.period,
+        secret: data.secret,
         token: Number(value),
       },
       method: 'POST',
@@ -39,10 +40,28 @@ async function handleForm(event, data) {
     });
     console.log(response);
   } catch (error) {
-    console.log(error);
-
+    const { responseJSON } = error;
+    if (responseJSON) {
+      if (responseJSON.details && responseJSON.info
+        && responseJSON.info === 'VALIDATION_ERROR') {
+        const { details } = responseJSON;
+        if (details.includes('algorithm')) {
+          return showError('message-container', 'Provided algorithm is invalid!');
+        }
+        if (details.includes('digits')) {
+          return showError('message-container', 'Digits value is invalid!');
+        }
+        if (details.includes('period')) {
+          return showError('message-container', 'Period value is invalid!');
+        }
+        return showError('message-container', 'Token value is invalid!');
+      }
+    }
+    return showError('message-container', 'Something went wrong...');
+  } finally {
     toggleElements(
       [
+        'back-button',
         'token',
         'verify-button',
         'verify-form',
@@ -50,26 +69,7 @@ async function handleForm(event, data) {
       ELEMENT_ACTIONS.enable,
     );
 
-    $('#verify-button').empty().append('Generate');
-
-    const { responseJSON } = error;
-    if (responseJSON) {
-      if (responseJSON.details && responseJSON.info
-        && responseJSON.info === 'VALIDATION_ERROR') {
-        const { details } = responseJSON;
-        if (details.includes('algorithm')) {
-          return showError('error-container', 'Provided algorithm is invalid!');
-        }
-        if (details.includes('digits')) {
-          return showError('error-container', 'Digits value is invalid!');
-        }
-        if (details.includes('period')) {
-          return showError('error-container', 'Period value is invalid!');
-        }
-        return showError('error-container', 'Token value is invalid!');
-      }
-    }
-    return showError('error-container', 'Something went wrong...');
+    return $('#verify-button').empty().append('Verify');
   }
 }
 
@@ -102,13 +102,22 @@ function DisplayQR(ROOT = '', data) {
   </form>
   <div
     class="error-container"
-    id="error-container"
+    id="message-container"
   ></div>
+  <button
+    class="link-button mt-1"
+    id="back-button"
+    type="button"
+  >
+    Back
+  </button>
 </div>
   `);
 
   const qrcode = new QRCode('qrcode');
   qrcode.makeCode(data.keyURI);
+
+  $('#back-button').on('click', Index);
 
   $('#verify-form').on(
     'submit',
