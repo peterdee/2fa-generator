@@ -1,7 +1,7 @@
 {
   "name": "2fa-generator",
   "version": "1.0.0",
-  "description": "Testing utility that generates OTPs for 2FA Mobile",
+  "description": "2FA Mobile testing utility",
   "private": true,
   "author": {
     "name": "Peter Dyumin",
@@ -30,6 +30,8 @@
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
     "express": "^4.18.1",
+    "express-rate-limit": "^6.4.0",
+    "helmet": "^5.1.0",
     "joi": "^17.6.0"
   },
   "devDependencies": {

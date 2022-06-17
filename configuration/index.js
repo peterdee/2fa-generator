@@ -9,10 +9,12 @@ export const KEY_URI_DEFAULTS = {
 export const PORT = Number(process.env.PORT) || 9009;
 
 export const RESPONSE_MESSAGES = {
+  internalServerError: 'INTERNAL_SERVER_ERROR',
   validationError: 'VALIDATION_ERROR',
 };
 
 export const RESPONSE_STATUSES = {
   badRequest: 400,
+  internalServerError: 500,
   ok: 200,
 };
