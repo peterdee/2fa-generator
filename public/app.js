@@ -1,169 +1,223 @@
+const DEFAULT_ACCOUNT_NAME = 'user@localhost';
+const DEFAULT_PERIOD = 30;
+const DEFAULT_ISSUER = '2FA Generator';
+const INPUT_LENGTH = 64;
 const ROOT = '#root';
 
-let REMAINING = 0;
-let TOKEN_EXAMPLE = '';
+async function handleGenerate(event) {
+  event.preventDefault();
 
-async function getContent() {
-  const { data } = await $.ajax({
-    method: 'GET',
-    url: '/generate',
-  });
-  return data;
-}
+  const accountName = $('#accountName').val().trim() || DEFAULT_ACCOUNT_NAME;
+  const algorithm = $('#algorithm').val();
+  const digits = Number($('#digits').val());
+  const issuer = $('#issuer').val().trim() || DEFAULT_ISSUER;
+  const period = Number($('#period').val()) || DEFAULT_PERIOD;
 
-function DisplayQR(data = {}) {
-  REMAINING = data.timeRemaining;
-  TOKEN_EXAMPLE = data.tokenExample;
+  if (period > 9999) {
+    return showError('error-container', 'Period value should be less than 9999!');
+  }
 
-  $(ROOT).empty().append(`
-<div class="centered">
-  <span class="title title-small noselect">
-    2FA Generator
-  </span>
-  <div
-    class="noselect mt-1"
-    id="qrcode"
-  ></div>
-  <div class="example mt-1">
-    <span
-      class="noselect"
-    >Token example: </span><span id="example">${String(TOKEN_EXAMPLE)}</span><span
-      class="noselect"
-    > (expires in <span id="remaining">${REMAINING}</span>)</span>
-  </div>
-  <form
-    class="form"
-    id="validate-form"
-  >
-    <input
-      id="otp"
-      type="number"
-    />
-    <button
-      class="noselect"
-      type="submit"
-    >
-      Validate token
-    </button>
-  </form>
-  <div
-    class="result noselect"
-    id="result"
-  ></div>
-  <button
-    class="noselect"
-    id="regenerate"
-    type="button"
-  >
-    Generate a new QR
-  </button>
-</div>
+  toggleElements([
+    'accountName',
+    'algorithm',
+    'digits',
+    'generate-button',
+    'generate-form',
+    'issuer',
+    'period',
+  ]);
+
+  $('#generate-button').empty().append(`
+<img
+  alt="Loading"
+  class="button-loader"
+  src="/loader.svg"
+/>
   `);
 
-  // eslint-disable-next-line
-  const qrcode = new QRCode('qrcode');
+  await new Promise((resolve) => {
+    setTimeout(resolve, 500);
+  });
 
-  qrcode.makeCode(data.keyURI);
+  try {
+    const response = await $.ajax({
+      data: {
+        accountName,
+        algorithm,
+        digits,
+        issuer,
+        period,
+      },
+      method: 'POST',
+      url: '/api/generate',
+    });
+    return DisplayQR(ROOT, response.data);
+  } catch (error) {
+    toggleElements(
+      [
+        'accountName',
+        'algorithm',
+        'digits',
+        'generate-button',
+        'generate-form',
+        'issuer',
+        'period',
+      ],
+      ELEMENT_ACTIONS.enable,
+    );
 
-  const [secret] = data.keyURI.split('secret=')[1].split('&');
+    $('#generate-button').empty().append('Generate');
 
-  const interval = setInterval(
-    async () => {
-      REMAINING -= 1;
-      if (REMAINING >= 0) {
-        $('#remaining').empty().append(REMAINING);
-      } else {
-        const { data: { timeRemaining, tokenExample } = {} } = await $.ajax({
-          data: {
-            secret,
-          },
-          method: 'POST',
-          url: '/token',
-        });
-        REMAINING = timeRemaining;
-        TOKEN_EXAMPLE = String(tokenExample);
-        $('#remaining').empty().append(REMAINING);
-        $('#example').empty().append(TOKEN_EXAMPLE);
+    const { responseJSON } = error;
+    if (responseJSON) {
+      if (responseJSON.details && responseJSON.info
+        && responseJSON.info === 'VALIDATION_ERROR') {
+        const { details } = responseJSON;
+        if (details.includes('algorithm')) {
+          return showError('error-container', 'Provided algorithm is invalid!');
+        }
+        if (details.includes('digits')) {
+          return showError('error-container', 'Digits value is invalid!');
+        }
+        return showError('error-container', 'Period value is invalid!');
       }
-    },
-    1000,
-  );
-
-  $('#validate-form').on('submit', async (event) => {
-    event.preventDefault();
-    $('#result').empty();
-    const token = Number($('#otp').val());
-
-    if (!token) {
-      return $('#result').empty().append(`
-<div class="error">  
-  Please provide a token!
-</div>
-      `);
     }
-    try {
-      await $.ajax({
-        data: {
-          secret,
-          token,
-        },
-        method: 'POST',
-        url: '/validate',
-      });
+    return showError('error-container', 'Something went wrong...');
+  }
+}
 
-      return $('#result').empty().append(`
-<div class="success">  
-  Token is valid!
-</div>
-      `);
-    } catch {
-      return $('#result').empty().append(`
-<div class="error">  
-  Token is invalid!
-</div>
-      `);
-    }
-  });
-
-  $('#regenerate').on('click', async () => {
-    clearInterval(interval);
-    const newData = await getContent();
-    return DisplayQR(newData);
-  });
+function handleInput(event) {
+  const target = event.target.name;
+  const lengthLeft = INPUT_LENGTH - $(`#${target}`).val().length;
+  if (lengthLeft >= 0) {
+    return $(`#${target}LengthLeft`).empty().append(lengthLeft);
+  }
+  return $(`#${target}`).val($(`#${target}`).val().slice(0, -1));
 }
 
 function Index() {
-  $(ROOT).append(`
-<div class="centered">
-  <span class="title title-big noselect">
-    2FA Generator
-  </span>
-  <button
-    class="noselect mt-1"
-    id="generate"
-    type="button"
+  $(ROOT).empty().append(`
+<div class="flex direction-column justify-content-center margin-auto mb-1 mt-2 width">
+  <div class="flex align-center">
+    <button
+      id="logo"
+      class="logo"
+      type="button"
+    >
+      <img
+        alt="2FA Generator"
+        class="logo-image"
+        src="./logo.svg"
+      />
+    </button>
+    <div class="flex direction-column ml-1 noselect">
+      <h1>
+        2FA Generator
+      </h1>
+      <div>
+        Generate a custom TOTP Key URI
+      </div>
+    </div>
+  </div>
+  <form
+    class="flex direction-column mt-2 noselect"
+    id="generate-form"
   >
-    Generate QR
-  </button>
-  <button
-    class="noselect mt-1"
-    id="configure"
-    type="button"
-  >
-    Configure
-  </button>
-</div>  
+    <div class="flex direction-column">
+      <div>
+        Algorithm
+      </div>
+      <select
+        class="mt-half"
+        id="algorithm"
+        name="algorithm"
+      >
+        <option value="SHA1">SHA1</option>
+        <option value="SHA256">SHA256</option>
+        <option value="SHA512">SHA512</option>
+      </select>
+    </div>
+    <div class="flex direction-column mt-1">
+      <div>
+        Digits
+      </div>
+      <select
+        class="mt-half"
+        id="digits"
+        name="digits"
+      >
+        <option value="6">6</option>
+        <option value="8">8</option>
+      </select>
+    </div>
+    <div class="flex direction-column mt-1">
+      <div>
+        Period
+      </div>
+      <input
+        class="mt-half"
+        id="period"
+        name="period"
+        placeholder="30"
+        type="number"
+      />
+    </div>
+    <div class="flex direction-column mt-1">
+      <div class="flex justify-content-space-between">
+        <div>
+          Issuer
+        </div>
+        <div id="issuerLengthLeft"></div>  
+      </div>
+      <input
+        class="mt-half"
+        id="issuer"
+        name="issuer"
+        placeholder="2FA Generator"
+        type="text"
+      />
+    </div>
+    <div class="flex direction-column mt-1">
+      <div class="flex justify-content-space-between">
+        <div>
+          Account name
+        </div>
+        <div id="accountNameLengthLeft"></div>  
+      </div>
+      <input
+        class="mt-half"
+        id="accountName"
+        name="accountName"
+        placeholder="user@localhost"
+        type="text"
+      />
+    </div>
+    <button
+      id="generate-button"
+      class="mt-2 width"
+      type="submit"
+    >
+      Generate
+    </button>
+  </form>
+  <div
+    id="error-container"
+    class="error-container noselect"
+  ></div>
+</div>
   `);
 
-  // eslint-disable-next-line
-  $('#configure').on('click', () => SecretParams(ROOT));
+  $('#accountName').val(DEFAULT_ACCOUNT_NAME);
+  $('#issuer').val(DEFAULT_ISSUER);
+  $('#period').val(DEFAULT_PERIOD);
 
-  $('#generate').on('click', async () => {
-    const data = await getContent();
-    return DisplayQR(data);
-  });
+  $('#accountNameLengthLeft').empty().append(INPUT_LENGTH - $('#accountName').val().length);
+  $('#issuerLengthLeft').empty().append(INPUT_LENGTH - $('#issuer').val().length);
+
+  $('#accountName').on('input', handleInput);
+  $('#issuer').on('input', handleInput);
+
+  $('#generate-form').on('submit', handleGenerate);
 }
 
-$(document).ready(() => {
-  Index();
-});
+$(document).ready(Index);
