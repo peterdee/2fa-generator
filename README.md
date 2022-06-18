@@ -2,7 +2,7 @@
 
 [2FA Mobile](https://github.com/peterdee/2fa-mobile) testing utility
 
-Stack: [Node](https://nodejs.org), [Express](http://expressjs.com), [OTPLib](https://www.npmjs.com/package/otplib), [QRCode](https://www.npmjs.com/package/qrcodejs), [jQuery](https://jquery.com)
+Stack: [Node](https://nodejs.org), [Express](http://expressjs.com), [OTPLib](https://www.npmjs.com/package/otplib), [JOI](https://www.npmjs.com/package/joi), [QRCode](https://www.npmjs.com/package/qrcodejs), [jQuery](https://jquery.com)
 
 DEV: http://localhost:9009
 
