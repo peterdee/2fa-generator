@@ -10,6 +10,7 @@ export const PORT = Number(process.env.PORT) || 9009;
 
 export const RESPONSE_MESSAGES = {
   internalServerError: 'INTERNAL_SERVER_ERROR',
+  invalidToken: 'INVALID_TOKEN',
   validationError: 'VALIDATION_ERROR',
 };
 

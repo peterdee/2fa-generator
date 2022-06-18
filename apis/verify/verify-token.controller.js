@@ -15,16 +15,21 @@ export default function verifyTokenController(request, reply) {
     });
   }
 
-  const isValid = verifyClientToken({
+  const { isValid, timeRemaining = null } = verifyClientToken({
     algorithm: value.algorithm || KEY_URI_DEFAULTS.algorithm,
     period: value.period,
     secret: value.secret,
     token: value.token,
   });
 
+  if (!isValid) {
+    throw new CustomError({ info: RESPONSE_MESSAGES.invalidToken });
+  }
+
   return response({
     data: {
       isValid,
+      timeRemaining,
     },
     reply,
     request,
