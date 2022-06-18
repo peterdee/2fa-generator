@@ -32,7 +32,7 @@ export function verifyToken({
     period,
   });
 
-  const isValid = instance.verify({ secret, token });
+  const isValid = instance.verify({ secret, token: String(token) });
   return {
     isValid,
     timeRemaining: isValid ? instance.timeRemaining() : null,

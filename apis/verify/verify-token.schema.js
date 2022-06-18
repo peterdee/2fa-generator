@@ -19,6 +19,6 @@ export default joi.object({
   token: joi
     .number()
     .integer()
-    .max(999999)
+    .max(99999999)
     .required(),
 });

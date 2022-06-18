@@ -18,7 +18,7 @@ export default function response({
   const responseObject = {
     datetime: now,
     info,
-    request: `${request.url} [${request.method}]`,
+    request: `${request.originalUrl} [${request.method}]`,
     status,
   };
 

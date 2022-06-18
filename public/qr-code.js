@@ -38,7 +38,12 @@ async function handleForm(event, data) {
       method: 'POST',
       url: '/api/verify',
     });
-    console.log(response);
+    
+    const { data: { timeRemaining = null } = {} } = response;
+    if (!timeRemaining) {
+      return showError('message-container', 'Something went wrong...');
+    }
+    return showSuccess('message-container', `Valid (remaining seconds: ${timeRemaining})`)
   } catch (error) {
     const { responseJSON } = error;
     if (responseJSON) {
@@ -51,10 +56,10 @@ async function handleForm(event, data) {
         if (details.includes('digits')) {
           return showError('message-container', 'Digits value is invalid!');
         }
-        if (details.includes('period')) {
-          return showError('message-container', 'Period value is invalid!');
-        }
-        return showError('message-container', 'Token value is invalid!');
+        return showError('message-container', 'Period value is invalid!');
+      }
+      if (responseJSON.info && responseJSON.info === 'INVALID_TOKEN') {
+        return showError('message-container', 'Token is invalid!');
       }
     }
     return showError('message-container', 'Something went wrong...');
@@ -75,7 +80,7 @@ async function handleForm(event, data) {
 
 function DisplayQR(ROOT = '', data) {
   $(ROOT).empty().append(`
-<div class="flex direction-column justify-content-center margin-auto mt-2 mb-1 width">
+<div class="flex direction-column margin-auto width">
   <div
     class="flex justify-content-center noselect mt-1"
     id="qrcode"
@@ -101,11 +106,11 @@ function DisplayQR(ROOT = '', data) {
     </button>
   </form>
   <div
-    class="error-container"
+    class="error-container noselect"
     id="message-container"
   ></div>
   <button
-    class="link-button mt-1"
+    class="link-button noselect"
     id="back-button"
     type="button"
   >

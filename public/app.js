@@ -95,7 +95,7 @@ function handleInput(event) {
 
 function Index() {
   $(ROOT).empty().append(`
-<div class="flex direction-column justify-content-center margin-auto mb-1 mt-2 width">
+<div class="flex direction-column margin-auto width">
   <div class="flex align-center">
     <button
       id="logo"
@@ -216,6 +216,8 @@ function Index() {
   $('#issuer').on('input', handleInput);
 
   $('#generate-form').on('submit', handleGenerate);
+
+  $('#year').empty().append(new Date().getFullYear());
 }
 
 $(document).ready(Index);

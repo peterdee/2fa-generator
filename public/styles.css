@@ -40,14 +40,12 @@ button {
   height: calc(var(--spacer) * 3);
   transition: background-color 200ms ease-out, box-shadow 200ms ease-out;
 }
-
 button:hover {
   background-color: var(--accent-highlight);
   box-shadow: 0 0 calc(var(--spacer) / 2) calc(var(--spacer) / 8) var(--accent-highlight);
   cursor: pointer;
   transition: background-color 200ms ease-in, box-shadow 200ms ease-in;
 }
-
 button:disabled {
   background-color: var(--muted);
   box-shadow: none;
@@ -81,15 +79,16 @@ input:focus {
 
 footer {
   font-size: calc(var(--spacer) - (var(--spacer) / 4));
-  height: calc(var(--spacer) * 2);
+  height: calc(var(--spacer) * 3);
   text-align: center;
 }
 
 main {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - (var(--spacer) * 2));
+  min-height: calc(100vh - (var(--spacer) * 3));
   justify-content: center;
+  padding: var(--spacer);
   width: 100%;
 }
 
@@ -142,6 +141,9 @@ select:focus {
 .ml-1 {
   margin-left: var(--spacer);
 }
+.ml-half {
+  margin-left: var(--spacer-half);
+}
 .mt-1 {
   margin-top: var(--spacer);
 }
@@ -163,10 +165,27 @@ select:focus {
   user-select: none;
 }
 
-.centered, .form {
-  display: flex;
-  margin: 0 auto;
-  flex-direction: column;
+.link-button {
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  color: var(--accent);
+  height: auto;
+  margin: calc(var(--spacer) * 2) auto 0 auto;
+  padding: 0;
+  transition: color 200ms ease-out;
+}
+.link-button:hover {
+  background-color: transparent;
+  box-shadow: none;
+  color: var(--accent-highlight);
+  transition: color 200ms ease-in;
+}
+.link-button:disabled {
+  background-color: transparent;
+  cursor: not-allowed;
+  color: var(--muted);
+  transition: color 200ms ease-in;
 }
 
 @keyframes fading {
@@ -188,10 +207,9 @@ select:focus {
   margin-top: var(--spacer);
   width: var(--width);
 }
-.error-text {
+.error-text, .success-text {
   align-items: center;
   animation: fading 5s linear;
-  background-color: var(--error);
   border-radius: var(--spacer-half);
   box-shadow: none;
   color: var(--text-inverted);
@@ -202,11 +220,26 @@ select:focus {
   transition: box-shadow 200ms ease-out;
   width: var(--width);
 }
+.error-text {
+  background-color: var(--error);
+}
 .error-text:hover {
   box-shadow: 0 0 calc(var(--spacer) / 2) calc(var(--spacer) / 8) var(--error);
   transition: box-shadow 200ms ease-in;
 }
+.success-text {
+  background-color: var(--success);
+}
+.success-text:hover {
+  box-shadow: 0 0 calc(var(--spacer) / 2) calc(var(--spacer) / 8) var(--success);
+  transition: box-shadow 200ms ease-in;
+}
 
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }           
+}
 .logo, .logo-image {
   height: calc(var(--spacer) * 4);
   user-select: none;
@@ -226,51 +259,9 @@ select:focus {
   cursor: pointer;
   padding: 0;
 }
-@keyframes rotate {
-  to {
-    transform: rotate(360deg);
-  }           
-}
-
 .button-loader {
   animation: rotate 1.5s linear infinite;
   height: calc(var(--spacer) * 2);
   user-select: none;
   width: calc(var(--spacer) * 2);
-}
-
-.title {
-  background: -webkit-linear-gradient(var(--accent), var(--background));
-  background-clip: text;
-  text-align: center;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.title-big {
-  font-size: calc(var(--spacer) * 2);
-  font-weight: 600;
-}
-
-.title-small {
-  font-size: var(--spacer);
-  font-weight: 200;
-}
-
-.example {
-  font-size: calc(var(--spacer) - (var(--spacer) / 4));
-  text-align: center;
-  width: 100%;
-}
-
-.form {
-  margin: 0;
-}
-
-.result {
-  font-size: var(--spacer);
-  height: calc(var(--spacer) * 2);
-  margin: var(--spacer) 0;
-  text-align: center;
-  width: 100%;
 }

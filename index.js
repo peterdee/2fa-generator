@@ -58,5 +58,5 @@ app.use((error, request, reply, _) => {
 
 app.listen(
   PORT,
-  () => logger(`-- 2FA-GENERATOR is running on port ${PORT}`),
+  () => logger(`-- 2FA GENERATOR is running on port ${PORT}`),
 );

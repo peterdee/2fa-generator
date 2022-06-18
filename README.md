@@ -1,4 +1,4 @@
-## 2FA-Generator
+## 2FA Generator
 
 [2FA Mobile](https://github.com/peterdee/2fa-mobile) testing utility
 
@@ -31,7 +31,7 @@ npm run dev
 
 ### Heroku
 
-This application is manually deployed to Heroku
+This application is manually deployed to [Heroku](https://www.heroku.com)
 
 ### License
 

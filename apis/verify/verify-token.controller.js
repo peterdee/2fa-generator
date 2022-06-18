@@ -1,6 +1,9 @@
 import CustomError from '../../utilities/custom-error.js';
+import {
+  KEY_URI_DEFAULTS,
+  RESPONSE_MESSAGES,
+} from '../../configuration/index.js';
 import response from '../../utilities/response.js';
-import { KEY_URI_DEFAULTS, RESPONSE_MESSAGES } from '../../configuration/index.js';
 import {
   validateVerifyData,
   verifyClientToken,
